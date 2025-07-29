@@ -10,12 +10,6 @@ This repository contains the tasks for the **UNICEF Data and Analytics technical
 
 ------------------------------------------------------------------------
 
-## Folder structure
-
--   Describe the **structure** of your repository
--   Explain the **purpose** of each folder and file
--   Include **instructions** on how to reproduce your analysis
-
 ## Project Organization
 
 ```         
