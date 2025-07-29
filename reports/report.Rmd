@@ -1,0 +1,119 @@
+---
+title: "Consultancy with the D&A Education Team"
+output: html_document
+date: "2025-07-27"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,   # hide code
+  message = FALSE, warning = FALSE,  # clean output
+  fig.align = "center"
+)
+```
+
+```{r library}
+library(tidyverse)
+library(ggthemes)
+library(ggplot2)
+library(ggside)
+library(here)
+
+```
+
+```{r reading}
+load(here("data", "treated", "MNCH_SAB_with_births.RData"))
+load(here("data", "treated", "MNCH_ANC4_with_births.RData"))
+```
+
+```{r treating_data}
+weighted_coverage <- MNCH_SAB_with_births %>% 
+  group_by(classification) %>% 
+  summarise(value = sum(SAB_value * births) / sum(births)) %>% 
+  mutate(indicator = "SAB") %>% 
+  bind_rows(MNCH_ANC4_with_births %>%
+              group_by(classification) %>% 
+              summarise(value = sum(ANC4_value * births) / sum(births)) %>% 
+              mutate(indicator = "ANC4"))
+
+weighted_coverage_wider <- weighted_coverage %>% 
+  pivot_wider(values_from = value,
+              names_from = indicator)
+
+data_for_plot <- MNCH_SAB_with_births %>% 
+  select(ISO3, country, SAB_value, classification, births) %>% 
+  full_join(MNCH_ANC4_with_births %>% 
+              select(ISO3, ANC4_value))
+
+
+```
+
+## Positions applied
+
+-   Administrative Data Analyst – Req. #581696
+
+## Introduction
+
+This is the final report for the "Test for Consultancy with the D&A Education Team" according to the instructions in the github repository (<https://github.com/unicef-drp/Consultancy-Assessment>).
+
+## Data and Methods
+
+The task for this assignment was to calculate the population-weighted coverage of two health services for countries categorized as on-track or off-track in achieving under-five mortality targets (as of 2022):
+
+- Antenatal care (ANC4): % of women (aged 15–49) with at least 4 antenatal care visits;
+- Skilled birth attendance (SBA): % of deliveries attended by skilled health personnel.
+
+To do so we use data from the 'Maternal and Newborn Health Coverage Database' downloaded from this link '<https://data.unicef.org/wp-content/uploads/2022/12/Maternal-and-Newborn-Health-Coverage-Database-November-2024.xlsx>'. It was preferred to use this data instead of UNICEF Global Data Repository, because it contained *ISO* indicators for each country, which was used to combine with different datasets following the guideline to use 'consistent country identifiers'.
+
+In order to calculate Population-weighted averages, we use projected births for 2022 from UN World Population Prospects as weights. Finally, Under-five mortality on-track and off-track classifications considered On-track if Status.U5MR is "achieved" or "on-track" and Off-track if Status.U5MR is "acceleration needed".
+
+The method to calculate a weighted average was the following for both indicators:
+
+$$
+\text{Weighted Coverage} =  \frac{\sum x_i \cdot w_i}{\sum w_i}
+$$
+
+- $x_i =  country estimate$ 
+
+- $w_i =  weight: projected births for 2022$
+
+## Results
+
+The plot below compares ANC4 and SAB indicators for countries classified as On-track and Off-track relative to Under-five mortality and weighted coverage for both indicators. We limit the plot only to countries that have both indicators: 4 countries don't have SAB estimates and 88 countries don't have ANC4 estimates; both indicators are available for 84 countries. The weighted coverage were calculated independently and uses all data available for each indicator.
+
+We can see that countries Off-track have lower Antenatal care and Skilled birth attendance than countries On-track. Although, stands out some countries that follow an reverse logic. For instance, countries like Bangladesh and Morocco are classified as On-track, but have at least one of the two indicators at the same level off the weighted coverage for off track countries. Similarly, countries Turkmenistan and Dominican Republic are classified as Off-track, but have very high values of SAB and ANC4 coverage, greater than the weighted coverage for On-track countries.
+
+```{r plot, include = TRUE, echo = FALSE, fig.width=12, fig.height=8, out.width="100%"}
+data_for_plot %>% 
+  ggplot(aes(x = SAB_value, y = ANC4_value)) +
+  geom_point(aes(color = classification, size = births)) +
+  scale_x_continuous(limits = c(0,100), breaks = seq(0,100,10)) +
+  scale_y_continuous(limits = c(0,100), breaks = seq(0,100,10)) +
+  #scale_x_log10() +
+  #facet_wrap(~ indicator) +
+  labs(title = "Coverage weighted estimates for ANC4 and SAB",
+       subtitle = str_wrap("Most recent estimate"),
+       caption = "UNICEF Global Data Repository",
+       x = "SAB",
+       y = "ANC4") +
+  theme_clean() +
+  theme(legend.position = "bottom",
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        axis.text.x = element_text(size = 20),
+        axis.text.y = element_text(size = 20),
+        plot.title = element_text(size = 30),
+        plot.subtitle = element_text(size = 20),
+        legend.text = element_text(size = 20)) +
+  annotate(geom = "text", x = 68, y = 59, label = str_wrap("Weighted coverage for 'off track' countries", width = 21), color = "#F8766D", fontface = "bold") +
+  annotate(geom = "text", x = 92, y = 76, label = str_wrap("Weighted coverage for 'on track' countries", width = 21), color = "#00BFC4", fontface = "bold") +
+  annotate(geom = "text", x = 70, y = 40, label = str_wrap("Bangladesh", width = 21), color = "black") +
+  annotate(geom = "text", x = 87, y = 55, label = str_wrap("Morocco", width = 21), color = "black") +
+  annotate(geom = "text", x = 99.7, y = 100, label = str_wrap("Turkmenistan", width = 21), color = "black") +
+  annotate(geom = "text", x = 99.2, y = 94, label = str_wrap("Dominican Republic", width = 21), color = "black") +
+  geom_point(data = weighted_coverage_wider, aes(x = SAB, y = ANC4, color = classification), shape = 15, size = 3)
+  
+```
+
+
+
