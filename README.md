@@ -35,7 +35,7 @@ This repository contains the tasks for the **UNICEF Data and Analytics technical
 ## Description of each file
 
 |  |  |
-|-------------------------------|------------------------------------------|
+|-------------------------------|-----------------------------------------|
 | **README.md** | This file |
 | **Consultancy-Assessment.Rproj** | RStudio Project file |
 | **run_project.R** | R script for running all analysis |
@@ -50,6 +50,10 @@ This repository contains the tasks for the **UNICEF Data and Analytics technical
 | **output/report.html** | Final report |
 | **renv** |  |
 
-## How to run this project
+## How to run
 
-Clone this reposity
+Clone this repository to your local computer. Use RStudio.
+
+1.  Open RStudio in the project folder.
+2.  Run `run_project.R`
+3.  Final report will be saved to `output/final_report.html`
