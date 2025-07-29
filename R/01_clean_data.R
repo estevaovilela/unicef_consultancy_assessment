@@ -1,8 +1,8 @@
+# run_project.R
 
-
+# Clean all the data and produces two .RData treated files
 
 # Library -----------------------------------------------------------------
-
 
 library(readxl)
 library(tidyverse)
@@ -20,10 +20,9 @@ MNCH_ANC4 <- readxl::read_excel("data/raw/Maternal-and-Newborn-Health-Coverage-D
 MNCH_SAB <- readxl::read_excel("data/raw/Maternal-and-Newborn-Health-Coverage-Database-November-2024.xlsx", sheet = "SAB", skip = 4)
 
 # World Population Prospects 2022
-# for 2022 projection data
 population_projections <- readxl::read_excel("data/raw/WPP2022_GEN_F01_DEMOGRAPHIC_INDICATORS_COMPACT_REV1.xlsx", skip = 16, col_types = "text", sheet = "Projections")
 
-# Under 5 classfication
+# Under 5 classification
 country_classification <- readxl::read_excel("data/raw/On-track and off-track countries.xlsx")
 
 # Cleaning, wrangling and merging ------------------------------------------
@@ -35,7 +34,7 @@ MNCH_ANC4_per_country <- MNCH_ANC4 %>%
   setNames(c("ISO3", "country", "year", "source", "ANC4_value")) %>% 
   arrange(ISO3, desc(year)) %>% 
   group_by(ISO3) %>% 
-  slice(1L) %>% 
+  slice(1L) %>% # filtering most recent estimate
   ungroup()
 
 MNCH_SAB_per_country <- MNCH_SAB %>% 
@@ -45,7 +44,7 @@ MNCH_SAB_per_country <- MNCH_SAB %>%
   setNames(c("ISO3", "country", "year", "source", "SAB_value")) %>% 
   arrange(ISO3, desc(year)) %>% 
   group_by(ISO3) %>% 
-  slice(1L) %>% 
+  slice(1L) %>% # filtering most recent estimate
   ungroup()
 
 births_per_country <- population_projections %>% 
@@ -53,13 +52,13 @@ births_per_country <- population_projections %>%
   select(`ISO3 Alpha-code`,
          `Births (thousands)`) %>% 
   setNames(c("ISO3", "births"))  %>% 
-  mutate(ISO3 = ifelse(ISO3 == "XKX", "RKS", ISO3)) %>% 
+  mutate(ISO3 = ifelse(ISO3 == "XKX", "RKS", ISO3)) %>% # correcting ISO code for Kosovo
   mutate(births = as.double(births))
 
 under_5_classification <- country_classification %>% 
   mutate(classification = ifelse(Status.U5MR == "Acceleration Needed", "off track", "on track"))
 
-# Combining datasets ------------------------------------------------------
+# Combining data sets ------------------------------------------------------
 
 MNCH_SAB_with_births <- MNCH_SAB_per_country %>% 
   left_join(under_5_classification,

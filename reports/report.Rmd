@@ -43,7 +43,8 @@ weighted_coverage_wider <- weighted_coverage %>%
 data_for_plot <- MNCH_SAB_with_births %>% 
   select(ISO3, country, SAB_value, classification, births) %>% 
   full_join(MNCH_ANC4_with_births %>% 
-              select(ISO3, ANC4_value))
+              select(ISO3, ANC4_value)) %>% 
+  filter(!is.na(classification))
 
 
 ```
@@ -87,24 +88,24 @@ We can see that countries Off-track have lower Antenatal care and Skilled birth 
 data_for_plot %>% 
   ggplot(aes(x = SAB_value, y = ANC4_value)) +
   geom_point(aes(color = classification, size = births)) +
-  scale_x_continuous(limits = c(0,100), breaks = seq(0,100,10)) +
-  scale_y_continuous(limits = c(0,100), breaks = seq(0,100,10)) +
+  scale_x_continuous(limits = c(0,110), breaks = seq(0,100,10)) +
+  scale_y_continuous(limits = c(0,110), breaks = seq(0,100,10)) +
   #scale_x_log10() +
   #facet_wrap(~ indicator) +
-  labs(title = "Coverage weighted estimates for ANC4 and SAB",
+  labs(title = "Estimates for ANC4 and SAB per country and weighted coverage - 2018-2022",
        subtitle = str_wrap("Most recent estimate"),
        caption = "UNICEF Global Data Repository",
        x = "SAB",
        y = "ANC4") +
   theme_clean() +
   theme(legend.position = "bottom",
-        axis.title.x = element_text(size = 20),
-        axis.title.y = element_text(size = 20),
-        axis.text.x = element_text(size = 20),
-        axis.text.y = element_text(size = 20),
-        plot.title = element_text(size = 30),
-        plot.subtitle = element_text(size = 20),
-        legend.text = element_text(size = 20)) +
+        axis.title.x = element_text(size = 15),
+        axis.title.y = element_text(size = 15),
+        axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 15),
+        plot.title = element_text(size = 20),
+        plot.subtitle = element_text(size = 15),
+        legend.text = element_text(size = 15)) +
   annotate(geom = "text", x = 68, y = 59, label = str_wrap("Weighted coverage for 'off track' countries", width = 21), color = "#F8766D", fontface = "bold") +
   annotate(geom = "text", x = 92, y = 76, label = str_wrap("Weighted coverage for 'on track' countries", width = 21), color = "#00BFC4", fontface = "bold") +
   annotate(geom = "text", x = 70, y = 40, label = str_wrap("Bangladesh", width = 21), color = "black") +
@@ -112,7 +113,8 @@ data_for_plot %>%
   annotate(geom = "text", x = 99.7, y = 100, label = str_wrap("Turkmenistan", width = 21), color = "black") +
   annotate(geom = "text", x = 99.2, y = 94, label = str_wrap("Dominican Republic", width = 21), color = "black") +
   geom_point(data = weighted_coverage_wider, aes(x = SAB, y = ANC4, color = classification), shape = 15, size = 3)
-  
+
+rm(list = ls())
 ```
 
 

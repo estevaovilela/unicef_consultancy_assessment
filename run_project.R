@@ -1,6 +1,7 @@
 # run_project.R
 
 # Load the environment
+# If needed, will ask to install all necessary R packages into renv/library folder
 source("user_profile.R")
 
 # Source scripts 

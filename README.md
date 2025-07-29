@@ -46,8 +46,9 @@ This repository contains the tasks for the **UNICEF Data and Analytics technical
 
 ## How to run
 
-Clone this repository to your local computer. Use RStudio.
+Clone this repository to your local computer. 
+Use RStudio.
 
-1.  Open RStudio in the project folder.
-2.  Run `run_project.R`
+1.  Open `unicef_consultancy_assessment.Rproj` into RStudio.
+2.  Run `run_project.R`. If needed, all packages necessary to run the codes will be installed in the renv/library folder
 3.  Final report will be saved to `output/final_report.html`
