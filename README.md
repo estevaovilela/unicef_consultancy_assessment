@@ -16,14 +16,14 @@ This repository contains the tasks for the **UNICEF Data and Analytics technical
 ├── LICENSE
 ├── README.md                  <- The top-level README for developers using this project (also known as this file!)
 ├── run_project.R              <- R script for running all analysis
-├── user_profile.R             <- 
+├── user_profile.R             <- Restoration of the R package environment
 ├── data
 │   ├── treated                <- The cleaned and treated data for analysis
 │   └── raw                    <- The original, immutable data dump
 ├── R                          <- R scripts for cleaning and treating data
 ├── reports                    <- RMarkdown scripts
 ├── output                     <- Final Report
-├── renv                       <- R scripts w/ scraping code and some exploratory data
+├── renv                       <- automatically created by the {renv} package in an R project to track and isolate the R package environment.
 ```
 
 ## Description of each file
@@ -33,8 +33,8 @@ This repository contains the tasks for the **UNICEF Data and Analytics technical
 | **README.md** | This file |
 | **Consultancy-Assessment.Rproj** | RStudio Project file |
 | **run_project.R** | R script for running all analysis |
-| **user_profile.R** |  |
-| **data/raw/Maternal-and-Newborn-Health-Coverage-Database-November-2024.xlsx** | Country table with iso codes, region, UNICEF regions. Also includes a table with region codes |
+| **user_profile.R** | Restoration of the R package environment |
+| **data/raw/Maternal-and-Newborn-Health-Coverage-Database-November-2024.xlsx** | "Maternal and Newborn Health Coverage Database" excel file with 'Antenatal care coverage: at least four visits' and 'Delivery assisted by a skilled birth attendant' sheets |
 | **data/raw/On-track and off-track countries.xlsx** | Under-five mortality classification |
 | **data/raw/WPP2022_GEN_F01_DEMOGRAPHIC_INDICATORS_COMPACT_REV1.xlsx** | Population Data: UN World Population Prospects, 2022 |
 | **data/treated/MNCH_ANC4_with_births.xlsx** | Antenatal care (ANC4) most recent estimate per country |
@@ -42,12 +42,11 @@ This repository contains the tasks for the **UNICEF Data and Analytics technical
 | **R/01_clean_data** | Loads the raw data, clean and merge all information and produces the .RData files stored in data/treated folder |
 | **reports/report.Rmd** | Loads the treated data, computes weighted coverages and ggplot variables and produces the .html final report stored in output/ folder |
 | **output/report.html** | Final report |
-| **renv** |  |
+| **renv** | automatically created by the {renv} package in an R project to track and isolate the R package environment. |
 
 ## How to run
 
-Clone this repository to your local computer. 
-Use RStudio.
+Clone this repository to your local computer. Use RStudio.
 
 1.  Open `unicef_consultancy_assessment.Rproj` into RStudio.
 2.  Run `run_project.R`. If needed, all packages necessary to run the codes will be installed in the renv/library folder
